@@ -9,12 +9,17 @@
       "Bash(pkill -f \"node|next\")",
       "Bash(git reset *)",
       "Bash(curl -s http://localhost:3000/wizard)",
-      "Bash(curl -X POST http://localhost:3000/api/wizard/complete -H 'Content-Type: application/json' -d '{ *)"
+      "Bash(curl -X POST http://localhost:3000/api/wizard/complete -H 'Content-Type: application/json' -d '{ *)",
+      "Bash(git pull *)",
+      "Bash(git stash *)",
+      "Bash(git rebase *)"
     ],
     "additionalDirectories": [
       "/Users/khalidalshehri/IdeaProjects/safahati/src/app/\\(auth\\)",
       "/Users/khalidalshehri/IdeaProjects/safahati/src/app/api/sites/\\[siteId\\]",
-      "/Users/khalidalshehri/IdeaProjects/safahati/src/components/wizard/steps"
+      "/Users/khalidalshehri/IdeaProjects/safahati/src/components/wizard/steps",
+      "/Users/khalidalshehri/.claude/projects/-Users-khalidalshehri-IdeaProjects-safahati/memory",
+      "/Users/khalidalshehri/.claude/projects/-Users-khalidalshehri-IdeaProjects-Safahati/memory"
     ]
   }
 }

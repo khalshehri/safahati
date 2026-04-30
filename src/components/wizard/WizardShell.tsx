@@ -9,6 +9,7 @@ import WizardStepBrand from "./steps/WizardStepBrand";
 import WizardStepSections from "./steps/WizardStepSections";
 import WizardStepLanguage from "./steps/WizardStepLanguage";
 import WizardStepReview from "./steps/WizardStepReview";
+import WizardPreview from "./WizardPreview";
 
 const STEPS = [
   { id: "business", label: "Business Essentials", labelAr: "أساسيات العمل" },
@@ -100,9 +101,9 @@ export default function WizardShell() {
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Top bar */}
-      <div className="border-b border-gray-200">
-        <div className="max-w-3xl mx-auto px-6 py-8">
-          <div className="flex items-center justify-between">
+      <div className="border-b border-gray-200 sticky top-0 bg-white z-10">
+        <div className="px-6 py-8">
+          <div className="flex items-center justify-between mb-6">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">
                 {isRTL ? "إنشاء موقعك" : "Create Your Website"}
@@ -120,7 +121,7 @@ export default function WizardShell() {
           </div>
 
           {/* Progress bar */}
-          <div className="mt-8 h-1 bg-gray-100 rounded-full overflow-hidden">
+          <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
             <motion.div
               className="h-full bg-black"
               animate={{ width: `${((currentStep + 1) / STEPS.length) * 100}%` }}
@@ -130,49 +131,57 @@ export default function WizardShell() {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="max-w-3xl mx-auto px-6 py-16 md:py-20">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentStep}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-          >
-            <CurrentStepComponent
-              isRTL={isRTL}
-              onLanguageChange={() => setIsRTL(!isRTL)}
-              onEditStep={setStep}
-            />
-          </motion.div>
-        </AnimatePresence>
+      {/* Content - 2 Column Layout */}
+      <div className="flex gap-8 lg:gap-12 px-6 py-16 md:py-20">
+        {/* Left Column - Form */}
+        <div className="flex-1 min-w-0">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStep}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
+              <CurrentStepComponent
+                isRTL={isRTL}
+                onLanguageChange={() => setIsRTL(!isRTL)}
+                onEditStep={setStep}
+              />
+            </motion.div>
+          </AnimatePresence>
 
-        {/* Actions */}
-        <div className={`mt-12 flex gap-4 ${isRTL ? "flex-row-reverse" : ""}`}>
-          <button
-            onClick={handlePrevious}
-            disabled={currentStep === 0}
-            className="px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isRTL ? "السابق" : "Back"}
-          </button>
-          <button
-            onClick={handleNext}
-            disabled={isLoading}
-            className="flex-1 px-6 py-2.5 bg-black text-white text-sm font-medium rounded-lg hover:bg-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? (
-              <span className="flex items-center justify-center gap-2">
-                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                {isRTL ? "جاري..." : "Loading..."}
-              </span>
-            ) : isLastStep ? (
-              isRTL ? "إنشاء الموقع" : "Create Website"
-            ) : (
-              isRTL ? "التالي" : "Next"
-            )}
-          </button>
+          {/* Actions */}
+          <div className={`mt-12 flex gap-4 ${isRTL ? "flex-row-reverse" : ""}`}>
+            <button
+              onClick={handlePrevious}
+              disabled={currentStep === 0}
+              className="px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isRTL ? "السابق" : "Back"}
+            </button>
+            <button
+              onClick={handleNext}
+              disabled={isLoading}
+              className="flex-1 px-6 py-2.5 bg-black text-white text-sm font-medium rounded-lg hover:bg-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  {isRTL ? "جاري..." : "Loading..."}
+                </span>
+              ) : isLastStep ? (
+                isRTL ? "إنشاء الموقع" : "Create Website"
+              ) : (
+                isRTL ? "التالي" : "Next"
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Right Column - Preview (Desktop Only) */}
+        <div className="hidden lg:block w-96 flex-shrink-0">
+          <WizardPreview isRTL={isRTL} />
         </div>
       </div>
     </div>
