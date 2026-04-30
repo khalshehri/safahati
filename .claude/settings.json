@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(echo \"Started with PID $!\")",
+      "Bash(node -e ' *)",
+      "Bash(curl -s -X POST http://localhost:3000/api/sites -H 'Content-Type: application/json' -d '{\"name\":\"Test\",\"industry\":\"company\",\"language\":\"en\"}')",
+      "Read(//Users/khalidalshehri/.claude/plans/**)",
+      "Bash(sqlite3 /Users/khalidalshehri/IdeaProjects/safahati/local.db \".schema\")"
+    ]
+  }
+}
