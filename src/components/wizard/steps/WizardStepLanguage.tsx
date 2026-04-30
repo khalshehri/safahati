@@ -1,54 +1,64 @@
 "use client";
 
 import { useWizardStore } from "@/lib/store/wizard-store";
+import { motion } from "framer-motion";
 
 interface WizardStepLanguageProps {
   isRTL: boolean;
-  onLanguageChange: (lang: "ar" | "en") => void;
 }
 
 export default function WizardStepLanguage({
   isRTL,
-  onLanguageChange,
 }: WizardStepLanguageProps) {
   const { answers, updateAnswers } = useWizardStore();
 
   const handleChange = (lang: "ar" | "en") => {
     updateAnswers("language", lang);
-    onLanguageChange(lang);
   };
 
   return (
-    <div className="space-y-8 lg:space-y-10">
+    <div className="space-y-8">
+      {/* Heading */}
       <div>
-        <h2 className="text-2xl lg:text-3xl font-semibold text-gray-900 mb-1">
-          {isRTL ? "اختر اللغة" : "Select language"}
-        </h2>
-        <p className="text-sm text-gray-600">
-          {isRTL ? "ما اللغة التي تفضل استخدامها؟" : "Which language will you use?"}
+        <h1 className="text-4xl font-bold text-[#111] mb-3">
+          {isRTL ? "اختر اللغة" : "What language is your website in?"}
+        </h1>
+        <p className="text-base text-gray-500">
+          {isRTL ? "تحديد لغة موقعك الرئيسية" : "This sets your website's primary language"}
         </p>
       </div>
 
-      <div className="space-y-3">
+      {/* Language Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {[
-          { code: "en", label: "English", flag: "🇺🇸" },
-          { code: "ar", label: "العربية", flag: "🇸🇦" },
+          { code: "en", label: "English", labelAr: "الإنجليزية", flag: "🇺🇸", dir: "LTR" },
+          { code: "ar", label: "العربية", labelAr: "اللغة العربية", flag: "🇸🇦", dir: "RTL" },
         ].map((lang) => (
-          <button
+          <motion.button
             key={lang.code}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => handleChange(lang.code as "ar" | "en")}
-            className={`
-              w-full p-4 rounded-lg border-2 text-left transition-all
-              ${
-                answers.language === lang.code
-                  ? "border-black bg-gray-50"
-                  : "border-gray-200 hover:border-gray-300"
-              }
-            `}
+            className={`h-32 p-6 rounded-2xl border-2 transition-all flex flex-col items-center justify-center gap-3 ${
+              answers.language === lang.code
+                ? "border-sky-500 bg-sky-50"
+                : "border-gray-200 bg-white hover:border-gray-300"
+            }`}
           >
-            <span className="text-2xl mr-3">{lang.flag}</span>
-            <span className="font-medium text-gray-900">{lang.label}</span>
-          </button>
+            <span className="text-5xl">{lang.flag}</span>
+            <div className="text-center">
+              <p className={`text-lg font-bold ${
+                answers.language === lang.code ? "text-sky-700" : "text-[#111]"
+              }`}>
+                {isRTL ? lang.labelAr : lang.label}
+              </p>
+              <p className={`text-xs ${
+                answers.language === lang.code ? "text-sky-600" : "text-gray-500"
+              }`}>
+                {lang.dir}
+              </p>
+            </div>
+          </motion.button>
         ))}
       </div>
     </div>
