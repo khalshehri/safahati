@@ -1,25 +1,31 @@
 "use client";
 
 import { useWizardStore } from "@/lib/store/wizard-store";
-import StepCard from "../components/StepCard";
-import ColorPicker from "../components/ColorPicker";
-import { Upload, Image as ImageIcon } from "lucide-react";
-import { motion } from "framer-motion";
+import Input from "../components/Input";
 import { useState } from "react";
 
 interface WizardStepBrandProps {
   isRTL: boolean;
 }
 
+const COLORS = [
+  { hex: "#000000", name: "Black" },
+  { hex: "#1F2937", name: "Dark Gray" },
+  { hex: "#6B7280", name: "Gray" },
+  { hex: "#3B82F6", name: "Blue" },
+  { hex: "#06B6D4", name: "Cyan" },
+  { hex: "#10B981", name: "Green" },
+  { hex: "#F59E0B", name: "Amber" },
+  { hex: "#EF4444", name: "Red" },
+  { hex: "#8B5CF6", name: "Purple" },
+];
+
 export default function WizardStepBrand({ isRTL }: WizardStepBrandProps) {
   const { answers, updateAnswers } = useWizardStore();
   const [uploadLoading, setUploadLoading] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const handleLogoUpload = async (file: File) => {
     setUploadLoading(true);
-    setUploadError(null);
-
     const formData = new FormData();
     formData.append("file", file);
 
@@ -28,153 +34,91 @@ export default function WizardStepBrand({ isRTL }: WizardStepBrandProps) {
         method: "POST",
         body: formData,
       });
-
       if (response.ok) {
         const data = await response.json();
         updateAnswers("logo", data.url);
-      } else {
-        setUploadError(isRTL ? "فشل التحميل" : "Upload failed");
       }
-    } catch (error) {
-      setUploadError(isRTL ? "خطأ في التحميل" : "Upload error");
-      console.error("Upload error:", error);
     } finally {
       setUploadLoading(false);
     }
   };
 
   return (
-    <StepCard
-      title={isRTL ? "هويتك البصرية" : "Create Your Visual Identity"}
-      subtitle={isRTL ? "اختر الألوان والشعار" : "Choose colors and logo"}
-      isRTL={isRTL}
-    >
-      <div className="space-y-8">
-        {/* Logo Upload */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-[#2D3436]">
-            {isRTL ? "الشعار" : "Logo"}
-          </h3>
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-xl font-semibold text-gray-900 mb-1">
+          {isRTL ? "الهوية البصرية" : "Brand identity"}
+        </h2>
+        <p className="text-sm text-gray-600">
+          {isRTL ? "اختر اللون والشعار" : "Choose a color and upload your logo"}
+        </p>
+      </div>
 
-          {answers.logo ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="relative p-6 bg-gray-50 rounded-lg border-2 border-[#7BA386]"
-            >
-              <div className="flex items-center gap-4">
-                <img
-                  src={answers.logo}
-                  alt="Logo preview"
-                  className="w-16 h-16 object-contain rounded"
-                />
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-[#2D3436]">
-                    {isRTL ? "تم التحميل بنجاح" : "Logo uploaded"}
-                  </p>
-                  <button
-                    onClick={() => updateAnswers("logo", undefined)}
-                    className="text-sm text-[#D97E5C] hover:underline"
-                  >
-                    {isRTL ? "تغيير" : "Change"}
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          ) : (
-            <label className="block cursor-pointer">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) handleLogoUpload(file);
-                }}
-                className="hidden"
-                disabled={uploadLoading}
-              />
-              <div
-                className={`
-                  p-8 border-2 border-dashed rounded-lg
-                  text-center transition-all duration-300
-                  ${
-                    uploadLoading
-                      ? "border-[#D4894C] bg-orange-50"
-                      : "border-[#E8DFD5] bg-white hover:border-[#D4894C] hover:bg-orange-50"
-                  }
-                `}
-              >
-                <motion.div
-                  animate={{ scale: uploadLoading ? 1.1 : 1 }}
-                  className="flex justify-center mb-3"
-                >
-                  <div className="p-3 bg-orange-100 rounded-lg">
-                    {uploadLoading ? (
-                      <div className="w-6 h-6 border-2 border-[#D4894C] border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <Upload size={24} className="text-[#D4894C]" />
-                    )}
-                  </div>
-                </motion.div>
-                <p className="font-medium text-[#2D3436]">
-                  {uploadLoading
-                    ? isRTL
-                      ? "جاري التحميل..."
-                      : "Uploading..."
-                    : isRTL
-                    ? "اسحب الشعار هنا"
-                    : "Drag logo here"}
-                </p>
-                <p className="text-sm text-[#8B7D6F]">
-                  {isRTL ? "أو انقر لاختيار" : "or click to select"}
-                </p>
-              </div>
-            </label>
-          )}
-
-          {uploadError && (
-            <p className="text-sm text-[#D97E5C]">{uploadError}</p>
-          )}
+      {/* Color Picker */}
+      <div>
+        <label className="text-sm font-semibold text-gray-900 mb-3 block">
+          {isRTL ? "لون العلامة الأساسي" : "Primary brand color"}
+        </label>
+        <div className="flex gap-2 flex-wrap">
+          {COLORS.map((color) => (
+            <button
+              key={color.hex}
+              onClick={() => updateAnswers("themeColor", color.hex)}
+              className={`w-10 h-10 rounded-lg border-2 transition-all ${
+                answers.themeColor === color.hex
+                  ? "border-gray-400"
+                  : "border-gray-200 hover:border-gray-300"
+              }`}
+              style={{ backgroundColor: color.hex }}
+              title={color.name}
+            />
+          ))}
         </div>
+      </div>
 
-        {/* Color Picker */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-[#2D3436]">
-            {isRTL ? "لون العلامة التجارية" : "Brand Color"}
-          </h3>
-          <ColorPicker
-            selectedColor={answers.themeColor || "#D4894C"}
-            onColorSelect={(color) => updateAnswers("themeColor", color)}
-            isRTL={isRTL}
+      {/* Logo Upload */}
+      <div>
+        <label className="text-sm font-semibold text-gray-900 mb-3 block">
+          {isRTL ? "الشعار" : "Logo (optional)"}
+        </label>
+        <label className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-gray-400 transition-colors">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) handleLogoUpload(file);
+            }}
+            className="hidden"
+            disabled={uploadLoading}
           />
-        </div>
+          {answers.logo ? (
+            <div className="flex items-center justify-center gap-3">
+              <img src={answers.logo} alt="Logo" className="w-10 h-10 object-contain" />
+              <span className="text-sm text-gray-700">{isRTL ? "تم التحميل" : "Uploaded"}</span>
+            </div>
+          ) : (
+            <div className="text-sm text-gray-600">
+              {isRTL ? "اسحب صورة أو انقر" : "Drag image or click"}
+            </div>
+          )}
+        </label>
+      </div>
 
-        {/* Description */}
+      {/* Description */}
+      <div>
+        <label className="text-sm font-semibold text-gray-900 mb-2 block">
+          {isRTL ? "الوصف (اختياري)" : "Description (optional)"}
+        </label>
         <textarea
           value={answers.description || ""}
           onChange={(e) => updateAnswers("description", e.target.value)}
-          placeholder={
-            isRTL
-              ? "اكتب وصفاً قصيراً لعملك..."
-              : "Write a short description of your business..."
-          }
+          placeholder={isRTL ? "اكتب وصفاً قصيراً..." : "Write a short description..."}
           maxLength={500}
-          className={`
-            w-full h-24 px-4 py-3 rounded-lg border-2
-            border-[#E8DFD5] bg-white
-            font-medium text-base
-            placeholder:text-[#A99D93]
-            focus:outline-none focus:border-[#D4894C] focus:ring-2 focus:ring-orange-100
-            transition-all duration-300
-            resize-none
-            ${isRTL ? "text-right" : "text-left"}
-          `}
-          dir={isRTL ? "rtl" : "ltr"}
+          className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black resize-none"
+          rows={3}
         />
-        <p className="text-xs text-[#A99D93]">
-          {(answers.description || "").length} / 500
-        </p>
       </div>
-    </StepCard>
+    </div>
   );
 }

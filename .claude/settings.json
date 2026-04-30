@@ -7,11 +7,13 @@
       "Read(//Users/khalidalshehri/.claude/plans/**)",
       "Bash(sqlite3 /Users/khalidalshehri/IdeaProjects/safahati/local.db \".schema\")",
       "Bash(pkill -f \"node|next\")",
-      "Bash(git reset *)"
+      "Bash(git reset *)",
+      "Bash(curl -s http://localhost:3000/wizard)"
     ],
     "additionalDirectories": [
       "/Users/khalidalshehri/IdeaProjects/safahati/src/app/\\(auth\\)",
-      "/Users/khalidalshehri/IdeaProjects/safahati/src/app/api/sites/\\[siteId\\]"
+      "/Users/khalidalshehri/IdeaProjects/safahati/src/app/api/sites/\\[siteId\\]",
+      "/Users/khalidalshehri/IdeaProjects/safahati/src/components/wizard/steps"
     ]
   }
 }

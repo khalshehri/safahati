@@ -1,16 +1,15 @@
 "use client";
 
 import { useWizardStore } from "@/lib/store/wizard-store";
-import StepCard from "../components/StepCard";
-import InputField from "../components/InputField";
-import { Building2, Briefcase, User, Zap } from "lucide-react";
+import Input from "../components/Input";
 import { motion } from "framer-motion";
+import { Building2, Briefcase, User, Zap } from "lucide-react";
 
 interface WizardStepBusinessEssentialsProps {
   isRTL: boolean;
 }
 
-const INDUSTRY_OPTIONS = [
+const INDUSTRIES = [
   { id: "company", label: "Company", labelAr: "شركة", icon: Building2 },
   { id: "freelancer", label: "Freelancer", labelAr: "عامل حر", icon: User },
   { id: "agency", label: "Agency", labelAr: "وكالة", icon: Briefcase },
@@ -32,87 +31,57 @@ export default function WizardStepBusinessEssentials({
   const { answers, updateAnswers } = useWizardStore();
 
   return (
-    <StepCard
-      title={isRTL ? "عن عملك" : "About Your Business"}
-      subtitle={isRTL ? "دعنا نبدأ بالأساسيات" : "Let's start with the basics"}
-      isRTL={isRTL}
-    >
-      <div className="space-y-8">
-        {/* Industry Selection */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-[#2D3436]">
-            {isRTL ? "ما نوع عملك؟" : "What type of business are you?"}
-          </h3>
-          <div
-            className={`grid grid-cols-2 md:grid-cols-3 gap-3 ${
-              isRTL ? "flex flex-row-reverse" : ""
-            }`}
-          >
-            {INDUSTRY_OPTIONS.map((industry) => {
-              const Icon = industry.icon;
-              const isSelected = answers.businessType === industry.id;
-              return (
-                <motion.button
-                  key={industry.id}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => updateAnswers("businessType", industry.id)}
-                  className={`
-                    p-4 rounded-lg border-2 transition-all duration-300
-                    flex flex-col items-center justify-center gap-2
-                    ${
-                      isSelected
-                        ? "border-[#D4894C] bg-orange-50 shadow-md"
-                        : "border-[#E8DFD5] bg-white hover:border-[#D4894C]"
-                    }
-                  `}
-                >
-                  <Icon
-                    size={24}
-                    className={isSelected ? "text-[#D4894C]" : "text-[#8B7D6F]"}
-                  />
-                  <span
-                    className={`text-sm font-medium ${
-                      isSelected ? "text-[#D4894C]" : "text-[#2D3436]"
-                    }`}
-                  >
-                    {isRTL ? industry.labelAr : industry.label}
-                  </span>
-                </motion.button>
-              );
-            })}
-          </div>
-        </div>
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-xl font-semibold text-gray-900 mb-1">
+          {isRTL ? "نوع عملك" : "What type of business are you?"}
+        </h2>
+        <p className="text-sm text-gray-600">
+          {isRTL ? "اختر الفئة الأقرب لعملك" : "Choose the category that best fits"}
+        </p>
+      </div>
 
-        {/* Business Name */}
-        <InputField
-          label={isRTL ? "اسم العمل" : "Business Name"}
+      {/* Industry Grid */}
+      <div className={`grid grid-cols-3 md:grid-cols-4 gap-3 ${isRTL ? "flex flex-row-reverse flex-wrap" : ""}`}>
+        {INDUSTRIES.map((industry) => {
+          const Icon = industry.icon;
+          const isSelected = answers.businessType === industry.id;
+          return (
+            <motion.button
+              key={industry.id}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => updateAnswers("businessType", industry.id)}
+              className={`
+                p-4 rounded-lg border-2 transition-all text-center
+                ${
+                  isSelected
+                    ? "border-black bg-gray-50"
+                    : "border-gray-200 hover:border-gray-300"
+                }
+              `}
+            >
+              <Icon size={20} className="mx-auto mb-2 text-gray-700" />
+              <span className="text-xs font-medium text-gray-700 block">
+                {isRTL ? industry.labelAr : industry.label}
+              </span>
+            </motion.button>
+          );
+        })}
+      </div>
+
+      {/* Business Name */}
+      <div>
+        <h3 className="text-sm font-semibold text-gray-900 mb-4">
+          {isRTL ? "اسم العمل" : "Business name"}
+        </h3>
+        <Input
           value={answers.businessName || ""}
           onChange={(value) => updateAnswers("businessName", value)}
-          placeholder={
-            isRTL
-              ? "أدخل اسم عملك"
-              : "Enter your business name"
-          }
-          success={!!answers.businessName && answers.businessName.length > 2}
+          placeholder={isRTL ? "أدخل اسم عملك" : "Enter your business name"}
           isRTL={isRTL}
-          maxLength={100}
         />
-
-        {/* Encouragement */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="p-4 bg-gradient-to-r from-orange-50 to-yellow-50 rounded-lg border border-[#D4894C] border-opacity-30"
-        >
-          <p className="text-sm text-[#8B7D6F]" dir={isRTL ? "rtl" : "ltr"}>
-            {isRTL
-              ? "✨ اختر من فضلك واسم عملك ونحن سننشئ موقعك بسهولة"
-              : "✨ Choose your industry and business name, and we'll create your website with ease"}
-          </p>
-        </motion.div>
       </div>
-    </StepCard>
+    </div>
   );
 }
