@@ -42,7 +42,7 @@ export default function WizardStepBusinessEssentials({
       </div>
 
       {/* Industry Grid */}
-      <div className={`grid grid-cols-3 md:grid-cols-4 gap-3 ${isRTL ? "flex flex-row-reverse flex-wrap" : ""}`}>
+      <div className={`grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-5 ${isRTL ? "flex flex-row-reverse flex-wrap" : ""}`}>
         {INDUSTRIES.map((industry) => {
           const Icon = industry.icon;
           const isSelected = answers.businessType === industry.id;
@@ -53,7 +53,7 @@ export default function WizardStepBusinessEssentials({
               whileTap={{ scale: 0.95 }}
               onClick={() => updateAnswers("businessType", industry.id)}
               className={`
-                p-4 rounded-lg border-2 transition-all text-center
+                p-5 md:p-6 rounded-lg border-2 transition-all text-center
                 ${
                   isSelected
                     ? "border-black bg-gray-50"
@@ -61,8 +61,8 @@ export default function WizardStepBusinessEssentials({
                 }
               `}
             >
-              <Icon size={20} className="mx-auto mb-2 text-gray-700" />
-              <span className="text-xs font-medium text-gray-700 block">
+              <Icon size={24} className="mx-auto mb-3 text-gray-700" />
+              <span className="text-sm font-medium text-gray-700 block">
                 {isRTL ? industry.labelAr : industry.label}
               </span>
             </motion.button>

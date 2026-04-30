@@ -132,9 +132,9 @@ export default function WizardShell() {
       </div>
 
       {/* Content - 2 Column Layout */}
-      <div className="flex gap-8 lg:gap-12 px-6 py-16 md:py-20">
+      <div className="flex gap-8 lg:gap-12 px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20 w-full max-w-7xl lg:max-w-full mx-auto lg:mx-0">
         {/* Left Column - Form */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 max-w-2xl lg:max-w-none">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentStep}
