@@ -132,55 +132,60 @@ export default function WizardShell() {
       </div>
 
       {/* Content - 2 Column Layout */}
-      <div className="flex gap-8 lg:gap-12 px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20 w-full max-w-7xl lg:max-w-full mx-auto lg:mx-0">
+      <div className="flex w-full min-h-[calc(100vh-160px)]">
         {/* Left Column - Form */}
-        <div className="flex-1 min-w-0 max-w-2xl lg:max-w-none">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentStep}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <CurrentStepComponent
-                isRTL={isRTL}
-                onLanguageChange={() => setIsRTL(!isRTL)}
-                onEditStep={setStep}
-              />
-            </motion.div>
-          </AnimatePresence>
+        <div className="flex-1 flex flex-col min-w-0">
+          <div className="flex-1 flex flex-col justify-between">
+            <div>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentStep}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="max-w-3xl"
+                >
+                  <CurrentStepComponent
+                    isRTL={isRTL}
+                    onLanguageChange={() => setIsRTL(!isRTL)}
+                    onEditStep={setStep}
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
 
-          {/* Actions */}
-          <div className={`mt-12 flex gap-4 ${isRTL ? "flex-row-reverse" : ""}`}>
-            <button
-              onClick={handlePrevious}
-              disabled={currentStep === 0}
-              className="px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isRTL ? "السابق" : "Back"}
-            </button>
-            <button
-              onClick={handleNext}
-              disabled={isLoading}
-              className="flex-1 px-6 py-2.5 bg-black text-white text-sm font-medium rounded-lg hover:bg-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isLoading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  {isRTL ? "جاري..." : "Loading..."}
-                </span>
-              ) : isLastStep ? (
-                isRTL ? "إنشاء الموقع" : "Create Website"
-              ) : (
-                isRTL ? "التالي" : "Next"
-              )}
-            </button>
+            {/* Actions */}
+            <div className={`mt-12 flex gap-4 max-w-3xl ${isRTL ? "flex-row-reverse" : ""}`}>
+              <button
+                onClick={handlePrevious}
+                disabled={currentStep === 0}
+                className="px-6 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200"
+              >
+                {isRTL ? "السابق" : "Back"}
+              </button>
+              <button
+                onClick={handleNext}
+                disabled={isLoading}
+                className="px-8 py-3 bg-black text-white text-sm font-medium rounded-lg hover:bg-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    {isRTL ? "جاري..." : "Loading..."}
+                  </span>
+                ) : isLastStep ? (
+                  isRTL ? "إنشاء الموقع" : "Create Website"
+                ) : (
+                  isRTL ? "التالي" : "Next"
+                )}
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Right Column - Preview (Desktop Only) */}
-        <div className="hidden lg:block w-96 flex-shrink-0">
+        <div className="hidden lg:flex lg:w-96 lg:flex-shrink-0 lg:border-l lg:border-gray-200 px-4 sm:px-8 py-12 md:py-16 lg:py-20 overflow-y-auto">
           <WizardPreview isRTL={isRTL} />
         </div>
       </div>
