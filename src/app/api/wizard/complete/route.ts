@@ -3,72 +3,9 @@ import { db } from "@/lib/db";
 import { sites, sections, wizardDrafts, users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { wizardAnswersSchema } from "@/lib/validators";
+import { getIndustryTemplate } from "@/config/industry-templates";
+import { populateSections, buildTheme } from "@/lib/wizard-populate";
 import { NextRequest, NextResponse } from "next/server";
-
-// Industry templates mapping - defines default sections for each industry
-const INDUSTRY_TEMPLATES: Record<string, any[]> = {
-  company: [
-    {
-      blockType: "hero",
-      templateId: "company-growth",
-      config: { headline: "Welcome", subheadline: "Your company description" },
-    },
-    {
-      blockType: "service",
-      templateId: "service-card",
-      config: { title: "Our Services", items: [] },
-    },
-  ],
-  freelancer: [
-    {
-      blockType: "hero",
-      templateId: "freelancer-notebook",
-      config: { headline: "I'm a Freelancer", subheadline: "Your tagline" },
-    },
-    {
-      blockType: "portfolio",
-      templateId: "portfolio-grid",
-      config: { title: "My Work", items: [] },
-    },
-  ],
-  restaurant: [
-    {
-      blockType: "hero",
-      templateId: "restaurant-chef",
-      config: { headline: "Welcome to our Restaurant", subheadline: "Est. 2024" },
-    },
-    {
-      blockType: "menu",
-      templateId: "menu-grid",
-      config: { title: "Our Menu", items: [] },
-    },
-  ],
-  clinic: [
-    {
-      blockType: "hero",
-      templateId: "clinic-care",
-      config: { headline: "Your Health, Our Priority", subheadline: "" },
-    },
-    {
-      blockType: "service",
-      templateId: "service-card",
-      config: { title: "Services", items: [] },
-    },
-  ],
-  agency: [
-    {
-      blockType: "hero",
-      templateId: "agency-studio",
-      config: { headline: "Creative Agency", subheadline: "We create amazing experiences" },
-    },
-    {
-      blockType: "portfolio",
-      templateId: "portfolio-grid",
-      config: { title: "Our Work", items: [] },
-    },
-  ],
-  // Add more industries as needed
-};
 
 export async function POST(req: NextRequest) {
   const session = await auth();
@@ -94,20 +31,32 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const validated = wizardAnswersSchema.parse(body);
 
+    // Get industry template
+    const industryTemplate = getIndustryTemplate(validated.businessType);
+    if (!industryTemplate) {
+      return NextResponse.json(
+        { error: "Invalid industry selected" },
+        { status: 400 }
+      );
+    }
+
     // Generate slug from business name
     const slug = validated.businessName
       .toLowerCase()
       .replace(/\s+/g, "-")
       .replace(/[^a-z0-9\-]/g, "");
 
-    const now = Date.now();
-    const siteId = `site-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const now = new Date();
+    const siteId = crypto.randomUUID();
 
-    // Get template sections for this industry
-    const templates = INDUSTRY_TEMPLATES[validated.businessType] || [];
+    // Populate template sections with wizard answers
+    const populatedSections = populateSections(industryTemplate, validated);
 
-    // Create site and sections in transaction
-    const result = await db
+    // Build theme from template + wizard color choice
+    const theme = buildTheme(industryTemplate.defaultTheme, validated);
+
+    // Create site
+    await db
       .insert(sites)
       .values({
         id: siteId,
@@ -115,7 +64,7 @@ export async function POST(req: NextRequest) {
         name: validated.businessName,
         slug,
         industry: validated.businessType,
-        theme: JSON.stringify({ primaryColor: validated.themeColor }),
+        theme: JSON.stringify(theme),
         language: validated.language,
         status: "draft",
         description: validated.description,
@@ -125,20 +74,21 @@ export async function POST(req: NextRequest) {
       })
       .run();
 
-    // Insert default sections
-    for (let i = 0; i < templates.length; i++) {
-      const template = templates[i];
-      await db.insert(sections).values({
-        id: `section-${siteId}-${i}`,
-        siteId,
-        blockType: template.blockType,
-        templateId: template.templateId,
-        config: JSON.stringify(template.config),
-        sortOrder: i,
-        isVisible: true,
-        createdAt: now,
-      });
-    }
+    // Insert populated sections
+    populatedSections.forEach((section, index) => {
+      db.insert(sections)
+        .values({
+          id: crypto.randomUUID(),
+          siteId,
+          blockType: section.blockType,
+          templateId: section.templateId,
+          config: JSON.stringify(section.config),
+          sortOrder: index,
+          isVisible: section.isVisible,
+          createdAt: now,
+        })
+        .run();
+    });
 
     // Clear wizard draft
     await db

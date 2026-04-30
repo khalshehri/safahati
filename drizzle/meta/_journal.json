@@ -8,6 +8,13 @@
       "when": 1772135442608,
       "tag": "0000_brainy_quasimodo",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1777577245735,
+      "tag": "0001_exotic_master_chief",
+      "breakpoints": true
     }
   ]
 }

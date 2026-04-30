@@ -116,6 +116,7 @@ export async function POST(request: Request) {
           config: JSON.stringify(section.config),
           sortOrder: section.sortOrder,
           isVisible: section.isVisible,
+          createdAt: now,
         })
         .run();
     }

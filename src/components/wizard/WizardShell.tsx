@@ -64,6 +64,25 @@ export default function WizardShell() {
   const isLastStep = currentStep === stepComponents.length - 1;
 
   const handleNext = async () => {
+    const { answers } = useWizardStore.getState();
+
+    // Auto-save draft before advancing
+    if (!isLastStep) {
+      try {
+        await fetch("/api/wizard", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            industry: answers.businessType,
+            step: currentStep + 1,
+            answers,
+          }),
+        });
+      } catch (error) {
+        console.error("Failed to auto-save wizard draft:", error);
+      }
+    }
+
     if (isLastStep) {
       // Submit wizard
       await submitWizard();

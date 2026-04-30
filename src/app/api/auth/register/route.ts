@@ -44,13 +44,15 @@ export async function POST(request: Request) {
         email: email.toLowerCase(),
         passwordHash,
         createdAt: new Date(),
+        updatedAt: new Date(),
       })
       .run();
 
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (error) {
+    console.error("Registration error:", error);
     return NextResponse.json(
-      { error: "Registration failed" },
+      { error: "Registration failed", details: String(error) },
       { status: 500 }
     );
   }

@@ -5,7 +5,7 @@ export const wizardAnswersSchema = z.object({
   businessType: z.string().min(1, "Business type is required"),
   businessName: z.string().min(1, "Business name is required").max(100),
   city: z.string().min(1, "City is required"),
-  phone: z.string().regex(/^\+?[0-9\s\-\(\)]{7,20}$/, "Valid phone number required"),
+  phone: z.string().min(7, "Phone must be at least 7 characters"),
   whatsappEnabled: z.boolean().default(false),
   logo: z.string().optional(),
   themeColor: z.string().regex(/^#[0-9A-F]{6}$/i, "Valid hex color required"),
