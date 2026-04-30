@@ -1,13 +1,21 @@
-import type { IndustryTemplate, SectionData } from "@/types/blocks";
+import type { SectionData } from "@/types/blocks";
+import type { IndustryTemplate } from "@/config/industry-templates";
 import type { WizardAnswers } from "@/lib/validators";
 
 export function populateSections(
   template: IndustryTemplate,
   answers: WizardAnswers
 ): Omit<SectionData, "id" | "siteId">[] {
-  const sections = JSON.parse(JSON.stringify(template.sections));
+  let sections = JSON.parse(JSON.stringify(template.sections));
 
-  sections.forEach((section) => {
+  // Filter sections based on user selection
+  if (answers.selectedSections && answers.selectedSections.length > 0) {
+    sections = sections.filter((section: Omit<SectionData, "id" | "siteId">) =>
+      answers.selectedSections.includes(section.blockType)
+    );
+  }
+
+  sections.forEach((section: Omit<SectionData, "id" | "siteId">) => {
     const config = section.config as Record<string, any>;
 
     switch (section.blockType) {

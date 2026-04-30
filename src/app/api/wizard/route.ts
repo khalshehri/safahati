@@ -50,7 +50,8 @@ export async function POST(req: NextRequest) {
 
     const validated = wizardDraftSchema.parse(body);
 
-    const now = Date.now();
+    const now = new Date();
+    const nowMs = now.getTime();
     const existing = await db
       .select()
       .from(wizardDrafts)
@@ -69,7 +70,7 @@ export async function POST(req: NextRequest) {
         .where(eq(wizardDrafts.userId, session.user.id));
     } else {
       await db.insert(wizardDrafts).values({
-        id: `wizard-${session.user.id}-${now}`,
+        id: `wizard-${session.user.id}-${nowMs}`,
         userId: session.user.id,
         industry: validated.industry,
         step: validated.step,

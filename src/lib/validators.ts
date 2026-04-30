@@ -11,6 +11,7 @@ export const wizardAnswersSchema = z.object({
   themeColor: z.string().regex(/^#[0-9A-F]{6}$/i, "Valid hex color required"),
   description: z.string().max(500).optional(),
   language: z.enum(["ar", "en"]).default("en"),
+  selectedSections: z.array(z.string()).default([]),
 });
 
 export type WizardAnswers = z.infer<typeof wizardAnswersSchema>;
@@ -26,7 +27,7 @@ export type WizardDraft = z.infer<typeof wizardDraftSchema>;
 
 // Auto-save validation
 export const autoSaveSchema = z.object({
-  config: z.record(z.any()),
+  config: z.record(z.string(), z.any()),
   clientUpdatedAt: z.number().int().positive(),
 });
 
@@ -44,7 +45,7 @@ export type OpeningHours = z.infer<typeof openingHoursSchema>;
 export const siteSchema = z.object({
   name: z.string().min(1).max(100),
   industry: z.string(),
-  theme: z.record(z.any()),
+  theme: z.record(z.string(), z.any()),
   language: z.enum(["ar", "en"]).default("en"),
   description: z.string().max(500).optional(),
   logo: z.string().optional(),

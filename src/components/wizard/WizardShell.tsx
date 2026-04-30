@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import WizardStepBusinessEssentials from "./steps/WizardStepBusinessEssentials";
 import WizardStepContactInfo from "./steps/WizardStepContactInfo";
 import WizardStepBrand from "./steps/WizardStepBrand";
+import WizardStepSections from "./steps/WizardStepSections";
 import WizardStepLanguage from "./steps/WizardStepLanguage";
 import WizardStepReview from "./steps/WizardStepReview";
 
@@ -13,6 +14,7 @@ const STEPS = [
   { id: "business", label: "Business Essentials", labelAr: "أساسيات العمل" },
   { id: "contact", label: "Contact Info", labelAr: "معلومات التواصل" },
   { id: "brand", label: "Brand", labelAr: "الهوية" },
+  { id: "sections", label: "Website Sections", labelAr: "أقسام الموقع" },
   { id: "language", label: "Language", labelAr: "اللغة" },
   { id: "review", label: "Review", labelAr: "مراجعة" },
 ];
@@ -21,6 +23,7 @@ const stepComponents = [
   WizardStepBusinessEssentials,
   WizardStepContactInfo,
   WizardStepBrand,
+  WizardStepSections,
   WizardStepLanguage,
   WizardStepReview,
 ];
