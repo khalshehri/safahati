@@ -31,9 +31,9 @@ export default function WizardStepBusinessEssentials({
   const { answers, updateAnswers } = useWizardStore();
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 lg:space-y-10">
       <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-1">
+        <h2 className="text-2xl lg:text-3xl font-semibold text-gray-900 mb-1">
           {isRTL ? "نوع عملك" : "What type of business are you?"}
         </h2>
         <p className="text-sm text-gray-600">
@@ -42,7 +42,7 @@ export default function WizardStepBusinessEssentials({
       </div>
 
       {/* Industry Grid */}
-      <div className={`grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-5 ${isRTL ? "flex flex-row-reverse flex-wrap" : ""}`}>
+      <div className={`grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-5 lg:gap-6 ${isRTL ? "flex flex-row-reverse flex-wrap" : ""}`}>
         {INDUSTRIES.map((industry) => {
           const Icon = industry.icon;
           const isSelected = answers.businessType === industry.id;

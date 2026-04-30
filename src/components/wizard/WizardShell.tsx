@@ -144,7 +144,6 @@ export default function WizardShell() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
-                  className="max-w-3xl"
                 >
                   <CurrentStepComponent
                     isRTL={isRTL}
@@ -156,7 +155,7 @@ export default function WizardShell() {
             </div>
 
             {/* Actions */}
-            <div className={`mt-12 flex gap-4 max-w-3xl ${isRTL ? "flex-row-reverse" : ""}`}>
+            <div className={`mt-12 flex gap-4 ${isRTL ? "flex-row-reverse" : ""}`}>
               <button
                 onClick={handlePrevious}
                 disabled={currentStep === 0}

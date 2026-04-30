@@ -16,9 +16,9 @@ export default function WizardStepContactInfo({ isRTL }: WizardStepContactInfoPr
   const { answers, updateAnswers } = useWizardStore();
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 lg:space-y-10">
       <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-1">
+        <h2 className="text-2xl lg:text-3xl font-semibold text-gray-900 mb-1">
           {isRTL ? "معلومات التواصل" : "Contact information"}
         </h2>
         <p className="text-sm text-gray-600">
